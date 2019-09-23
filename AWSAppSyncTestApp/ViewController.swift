@@ -27,9 +27,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        AWSDDLog.sharedInstance.logLevel = .verbose
-        // AWSDDTTYLogger.sharedInstance.logFormatter = AWSAppSyncClientLogFormatter()
-        AWSDDLog.add(AWSDDTTYLogger.sharedInstance) // TTY = Xcode console
+        AWSDDLog.default.logLevel = .verbose
+        // AWSDDTTYLogger.default.logFormatter = AWSAppSyncClientLogFormatter()
+        AWSDDLog.add(AWSDDTTYLogger.default) // TTY = Xcode console
     }
     @IBAction func onInitializeIAMClicked(_ sender: Any) {
         setupIAMAppSyncClient()
@@ -47,7 +47,7 @@ class ViewController: UIViewController {
         AWSS3TransferUtility.register(with: serviceConfiguration, forKey: ViewController.s3TransferUtilityKey)
         let transferUtility = AWSS3TransferUtility.s3TransferUtility(forKey: ViewController.s3TransferUtilityKey)
         let cacheConfiguration = try? AWSAppSyncCacheConfiguration()
-        AWSMobileClient.sharedInstance().initialize { (_, _) in
+        AWSMobileClient.default().initialize { (_, _) in
             
         }
         // Initialize the AWS AppSync configuration
@@ -55,7 +55,7 @@ class ViewController: UIViewController {
                                                               userPoolsAuthProvider: {
                                                                 class MyCognitoUserPoolsAuthProvider : AWSCognitoUserPoolsAuthProviderAsync {
                                                                     func getLatestAuthToken(_ callback: @escaping (String?, Error?) -> Void) {
-                                                                        AWSMobileClient.sharedInstance().getTokens { (tokens, error) in
+                                                                        AWSMobileClient.default().getTokens { (tokens, error) in
                                                                             if error != nil {
                                                                                 callback(nil, error)
                                                                             } else {
@@ -83,14 +83,14 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onSignInClicked(_ sender: Any) {
-        AWSMobileClient.sharedInstance().signOut()
-        AWSMobileClient.sharedInstance().signIn(username: "validuser", password: "ValidPassword") { (userstate, err) in
+        AWSMobileClient.default().signOut()
+        AWSMobileClient.default().signIn(username: "validuser", password: "ValidPassword") { (userstate, err) in
             
         }
     }
     
     @IBAction func onSignOutClicked(_ sender: Any) {
-        AWSMobileClient.sharedInstance().signOut()
+        AWSMobileClient.default().signOut()
     }
     
     @IBAction func onPerformNormalMutation(_ sender: Any) {
